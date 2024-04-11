@@ -2,39 +2,22 @@
   <div class="events-container p-4">
     <h1 class="text-3xl font-bold mb-4">Events</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <!-- Event Card -->
-      <div
-        v-for="event in events"
-        :key="event.id"
-        class="card w-96 bg-base-100 shadow-xl"
-      >
-        <!-- Event Image Placeholder -->
+      <div v-for="event in events" :key="event.id" class="card w-96 bg-base-100 shadow-xl">
         <figure>
           <img src="https://via.placeholder.com/400x200" alt="Event Image" />
         </figure>
-        <!-- Card Body -->
         <div class="card-body">
-          <!-- Event Title -->
           <h2 class="card-title">
             {{ event.name }}
             <div class="badge badge-secondary">NEW</div>
           </h2>
-          <!-- Event Description -->
           <p>{{ event.description }}</p>
-          <!-- Card Actions -->
           <div class="card-actions justify-end">
-            <div class="badge badge-outline">
-              Date: {{ formatDate(event.date) }}
-            </div>
-            <div class="badge badge-outline">
-              Location: {{ event.location }}
-            </div>
+            <div class="badge badge-outline">Date: {{ formatDate(event.date) }}</div>
+            <div class="badge badge-outline">Location: {{ event.location }}</div>
           </div>
-          <!-- Tickets Remaining -->
           <div class="justify-start pt-4">
-            <div class="badge badge-info">
-              Tickets Remaining: {{ event.tickets_remaining }}
-            </div>
+            <div class="badge badge-info">Tickets Remaining: {{ event.tickets_remaining }}</div>
           </div>
         </div>
       </div>
