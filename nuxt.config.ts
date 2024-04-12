@@ -5,4 +5,7 @@ export default defineNuxtConfig({
     dataValue: 'theme', // activate data-theme in <html> tag
     classSuffix: '',
   },
+  alias: {
+    pinia: "/node_modules/@pinia/nuxt/node_modules/pinia/dist/pinia.mjs"
+  },
 });
