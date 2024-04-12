@@ -9,9 +9,12 @@
     </div>
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div v-for="event in events" :key="event.id" class="card w-96 glass">
+        <a :href="`/event/${event.id}`">
         <figure>
           <img src="https://via.placeholder.com/400x200" alt="Event Image" />
         </figure>
+        </a>
+        
         <div class="card-body">
           <h2 class="card-title">
             {{ event.name }}
