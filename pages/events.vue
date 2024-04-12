@@ -2,7 +2,7 @@
   <div class="events-container p-4">
     <h1 class="text-3xl font-bold mb-4">Events</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div v-for="event in events" :key="event.id" class="card w-96 bg-base-100 shadow-xl">
+      <div v-for="event in events" :key="event.id" class="card w-96 glass">
         <figure>
           <img src="https://via.placeholder.com/400x200" alt="Event Image" />
         </figure>
