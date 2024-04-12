@@ -1,43 +1,52 @@
 <template>
-  <div class="container mx-auto p-4">
-    <div class="flex flex-wrap md:flex-nowrap gap-4">
-      <!-- Event Description Card -->
-      <div class="flex-1">
-        <div class="card w-full bg-base-100 shadow-xl">
-          <figure><img :src="event.image || 'https://via.placeholder.com/400x200'" alt="Event Image" /></figure>
-          <div class="card-body">
-            <h2 class="card-title">{{ event.name }}
-              <div class="badge badge-secondary">NEW</div>
-            </h2>
-            <p>{{ event.description }}</p>
-            <div class="card-actions justify-end">
-              <div class="badge badge-outline">Date: {{ event.date | formatDate }}</div>
-              <div class="badge badge-outline">Location: {{ event.location }}</div>
-            </div>
-          </div>
+  <div class="bg-white">
+    <div class="pt-6">
+      <!-- Event Title and Breadcrumb -->
+      <nav aria-label="Breadcrumb">
+        <ol role="list" class="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+          <li>
+            <a href="#" class="text-sm font-medium text-gray-900">Home</a>
+            <svg width="16" height="20" viewBox="0 0 16 20" fill="currentColor" aria-hidden="true" class="h-5 w-4 text-gray-300">
+              <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
+            </svg>
+          </li>
+          <li class="text-sm">
+            <a href="#" aria-current="page" class="font-medium text-gray-500 hover:text-gray-600">{{ event.name }}</a>
+          </li>
+        </ol>
+      </nav>
+
+      <!-- Image Gallery -->
+      <div class="mx-auto mt-6 max-w-2xl sm:px-6 lg:max-w-7xl lg:grid lg:grid-cols-3 lg:gap-x-8 lg:px-8">
+        <div class="aspect-w-3 aspect-h-2 rounded-lg overflow-hidden lg:block">
+          <img :src="event.images[0]" :alt="event.name" class="object-cover object-center" />
+        </div>
+        <div class="aspect-w-3 aspect-h-2 rounded-lg overflow-hidden">
+          <img :src="event.images[1]" :alt="event.name" class="object-cover object-center" />
+        </div>
+        <div class="aspect-w-3 aspect-h-2 rounded-lg overflow-hidden">
+          <img :src="event.images[2]" :alt="event.name" class="object-cover object-center" />
         </div>
       </div>
 
-      <!-- Booking Form -->
-      <div class="flex-1">
-        <div class="card w-full bg-base-100 shadow-xl">
-          <div class="card-body">
-            <h2 class="card-title">Book Tickets</h2>
-            <form @submit.prevent="submitBooking">
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">Select Quantity</span>
-                </label>
-                <select v-model="booking.quantity" class="select select-bordered w-full max-w-xs">
-                  <option disabled value="">Select number</option>
-                  <option v-for="n in availableTickets" :key="n" :value="n">{{ n }}</option>
-                </select>
-              </div>
-              <div class="form-control mt-4">
-                <button class="btn btn-primary" type="submit">Submit Booking</button>
-              </div>
-            </form>
-          </div>
+      <!-- Event Info & Booking Form -->
+      <div class="mx-auto max-w-2xl px-4 pb-16 sm:px-6 lg:max-w-7xl lg:grid lg:grid-cols-3 lg:gap-x-8 lg:px-8">
+        <!-- Event Details -->
+        <div class="lg:col-span-2 lg:pr-8">
+          <h1 class="text-2xl font-bold text-gray-900">{{ event.name }}</h1>
+          <p class="text-3xl text-gray-900">{{ event.date }}</p>
+          <p class="mt-4 text-gray-500">{{ event.description }}</p>
+        </div>
+
+        <!-- Booking Section -->
+        <div class="mt-4 lg:mt-0 lg:row-span-3">
+          <form @submit.prevent="submitBooking">
+            <h2 class="text-lg font-medium text-gray-900">Book Your Tickets</h2>
+            <div class="mt-2">
+              <input type="number" v-model="booking.quantity" min="1" max="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Number of Tickets">
+            </div>
+            <button type="submit" class="mt-4 flex w-full items-center justify-center rounded-md bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Book Now</button>
+          </form>
         </div>
       </div>
     </div>
@@ -45,31 +54,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useFetch } from 'nuxt/app'
+import { ref } from 'vue';
 
-const route = useRoute()
-const event = ref(null)
+const event = ref({
+  name: "Live Concert",
+  date: "2024-04-22",
+  description: "Join us for a night of spectacular performances and unforgettable memories.",
+  images: [
+    "https://example.com/image1.jpg",
+    "https://example.com/image2.jpg",
+    "https://example.com/image3.jpg"
+  ]
+});
+
 const booking = ref({
-  quantity: 1,
-})
-const availableTickets = ref([])
+  quantity: 1
+});
 
-onMounted(async () => {
-  const { data } = await useFetch(`/api/events/${route.params.id}`)
-  event.value = data.value
-  availableTickets.value = Array.from({length: event.value.tickets_remaining}, (_, i) => i + 1)
-})
-
-const submitBooking = async () => {
-  // API call to submit booking
-  console.log('Submitting booking for', event.value.name, 'Quantity:', booking.value.quantity)
-}
-
-function formatDate(value) {
-  if (value) {
-    return new Date(value).toLocaleDateString('en-US')
-  }
+function submitBooking() {
+  alert(`Booking ${booking.value.quantity} tickets for ${event.value.name}`);
 }
 </script>
