@@ -1,25 +1,27 @@
 <template>
   <div class="hero min-h-screen bg-base-200">
-    <div class="hero-content flex-col lg:flex-row-reverse" v-if="!authStore.isLoggedIn">
+    <div v-if="!authStore.isLoggedIn" class="hero-content flex-col lg:flex-row-reverse">
       <!-- Loading Spinner -->
       <div v-if="authStore.isLoading" class="btn loading">loading</div>
       <div class="text-center lg:text-left">
         <h1 class="text-5xl font-bold">Login now!</h1>
-        <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+        <p class="py-6">
+          <b>Seamless Booking Process:</b> <br>Our intuitive interface guides you through the booking process step-by-step, ensuring a smooth and efficient experience.
+        </p>
       </div>
       <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-        <form class="card-body" @submit.prevent="handleLogin">
+        <form @submit.prevent="handleLogin" class="card-body">
           <div class="form-control">
             <label class="label">
               <span class="label-text">Email</span>
             </label>
-            <input type="email" placeholder="email" class="input input-bordered" v-model="email" required />
+            <input type="email" placeholder="email" v-model="email" class="input input-bordered" required />
           </div>
           <div class="form-control">
             <label class="label">
               <span class="label-text">Password</span>
             </label>
-            <input type="password" placeholder="password" class="input input-bordered" v-model="password" required />
+            <input type="password" placeholder="password" v-model="password" class="input input-bordered" required />
             <label class="label">
               <a href="#" class="label-text-alt link link-hover">Forgot password?</a>
             </label>
@@ -31,7 +33,7 @@
       </div>
     </div>
     <!-- Welcome Message -->
-    <div class="stats shadow" v-else>
+    <div v-else class="stats shadow">
       <div class="stat">
         <div class="stat-title">Welcome back!</div>
         <div class="stat-value">{{ authStore.user.name }}</div>
@@ -46,19 +48,41 @@
 </template>
 
 <script setup>
-import { useAuthStore } from '@/stores/auth';
-
-const authStore = useAuthStore();
-const email = ref('');
-const password = ref('');
-
-function handleLogin() {
-  authStore.setLoading(true);
-  // Here you would make your API request
-  setTimeout(() => {
-    // Simulating API response
-    authStore.setUser({ id: 1, name: 'John Doe', email: email.value });
-    authStore.setLoading(false);
-  }, 2000);
-}
-</script>
+  import { ref } from 'vue';
+  import { useAuthStore } from '@/stores/auth';  // Ensure correct path
+  import { useRuntimeConfig } from '#imports';
+  import { useRouter } from 'vue-router';
+  
+  const config = useRuntimeConfig();
+  const router = useRouter();
+  const authStore = useAuthStore();
+  const email = ref('');
+  const password = ref('');
+  
+  async function handleLogin() {
+    authStore.setLoading(true);  // Begin loading
+  
+    try {
+      const response = await fetch(`${config.public.apiUrl}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email.value, password: password.value }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      authStore.setUser(data);  // Set user data on successful login
+      router.push('/dashboard');  // Navigate to dashboard
+    } catch (error) {
+      console.error('Login error:', error.message);
+    } finally {
+      authStore.setLoading(false);  // End loading
+    }
+  }
+  </script>
+  

@@ -1,22 +1,27 @@
+// stores/auth.js
 import { defineStore } from 'pinia';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
+    isLoggedIn: false,
     user: null,
-    isLoading: false,
-    isLoggedIn: false
+    isLoading: false  // Initial loading state is false
   }),
   actions: {
-    setUser(user) {
+    setUser(user) {  // Method to set the user and update login status
+      this.isLoggedIn = true;
       this.user = user;
-      this.isLoggedIn = !!user;
     },
-    setLoading(isLoading) {
-      this.isLoading = isLoading;
+    logUserIn(user) {
+      this.isLoggedIn = true;
+      this.user = user;
     },
-    logOut() {
-      this.user = null;
+    logUserOut() {
       this.isLoggedIn = false;
+      this.user = null;
+    },
+    setLoading(loading) {
+      this.isLoading = loading; // Set the loading state
     }
   }
 });
