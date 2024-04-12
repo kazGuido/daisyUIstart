@@ -12,5 +12,10 @@ export default defineNuxtConfig({
     public: {
       apiUrl: process.env.API_URL || 'https://8f7532c3-ae66-446a-9029-19b1eeebab3b-00-30hfb3eka4tfa.kirk.replit.dev',
     }
+  },
+  router: {
+    extendRoutes(routes, resolve) {
+      console.log(routes);  // This will log all routes configuration to the console
+    }
   }
 });

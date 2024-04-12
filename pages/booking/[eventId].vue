@@ -1,8 +1,5 @@
 <template>
-  <div class="bg-white">
-    <div class="pt-6">
-      <!-- Event Title and Breadcrumb -->
-      <nav aria-label="Breadcrumb">
+  <nav aria-label="Breadcrumb">
         <ol role="list" class="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
           <li>
             <a href="#" class="text-sm font-medium text-gray-900">Home</a>
@@ -16,16 +13,21 @@
         </ol>
       </nav>
 
+  <div class="bg-white">
+    <div class="pt-6">
+      <!-- Event Title and Breadcrumb -->
+      
+
       <!-- Image Gallery -->
       <div class="mx-auto mt-6 max-w-2xl sm:px-6 lg:max-w-7xl lg:grid lg:grid-cols-3 lg:gap-x-8 lg:px-8">
         <div class="aspect-w-3 aspect-h-2 rounded-lg overflow-hidden lg:block">
-          <img :src="event.images[0]" :alt="event.name" class="object-cover object-center" />
+          <img src="https://via.placeholder.com/400x300" :alt="event.name" class="object-cover object-center" />
         </div>
         <div class="aspect-w-3 aspect-h-2 rounded-lg overflow-hidden">
-          <img :src="event.images[1]" :alt="event.name" class="object-cover object-center" />
+          <img src="https://via.placeholder.com/400x300" :alt="event.name" class="object-cover object-center" />
         </div>
         <div class="aspect-w-3 aspect-h-2 rounded-lg overflow-hidden">
-          <img :src="event.images[2]" :alt="event.name" class="object-cover object-center" />
+          <img src="https://via.placeholder.com/400x300" :alt="event.name" class="object-cover object-center" />
         </div>
       </div>
 
