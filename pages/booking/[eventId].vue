@@ -80,30 +80,27 @@ const booking = ref({
 function submitBooking() {
   alert(`Booking ${booking.value.quantity} tickets for ${event.value.name}`);
 }
+// import { ref } from 'vue';
 
-export default {
-  methods: {
-    payWithPaystack() {
-      const currentDateTime = new Date().toISOString();
-      const customerEmail = `customer_${currentDateTime}@mycompany.com`.replace(/:/g, '-');
+function payWithPaystack() {
+  const currentDateTime = new Date().toISOString();
+  const customerEmail = `customer_${currentDateTime}@mycompany.com`.replace(/:/g, '-');
 
-      let handler = PaystackPop.setup({
-        key: 'pk_test_35d147ab629a9ccb014d192254e94403fe934449', // Replace with your public key
-        email: customerEmail,
-        amount: 10000 * 100, // Amount in smallest currency unit
-        currency: 'XOF',
-        ref: '' + Math.floor((Math.random() * 1000000000) + 1),
-        onClose: () => {
-          alert('Window closed.');
-        },
-        callback: (response) => {
-          let message = 'Payment complete! Reference: ' + response.reference;
-          alert(message);
-        }
-      });
-
-      handler.openIframe();
+  let handler = PaystackPop.setup({
+    key: 'pk_test_35d147ab629a9ccb014d192254e94403fe934449', // Replace with your public key
+    email: customerEmail,
+    amount: 10000 * 100, // Amount in smallest currency unit
+    currency: 'XOF',
+    ref: '' + Math.floor((Math.random() * 1000000000) + 1),
+    onClose: function() {
+      alert('Window closed.');
+    },
+    callback: function(response) {
+      let message = 'Payment complete! Reference: ' + response.reference;
+      alert(message);
     }
-  }
+  });
+
+  handler.openIframe();
 }
 </script>
