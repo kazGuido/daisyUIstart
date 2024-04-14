@@ -10,6 +10,7 @@
         <!-- Conditional Rendering for Authentication Links -->
         <li v-if="!authStore.isLoggedIn"><a href="/login">Login</a></li>
         <li v-if="authStore.isLoggedIn"><a href="/dashboard">Dashboard</a></li>
+        <li v-if="authStore.isLoggedIn"><a href="/createEvent">Organize an Event</a></li>
         <li v-if="authStore.isLoggedIn" @click="logout"><a href="#">Logout</a></li>
         <li><a href="/events">Events</a></li>
       </ul>
@@ -75,8 +76,7 @@ const themes = [
   'coffee',
   'winter',
 ];
-</script>
-<script setup>
+
   import { useAuthStore } from '@/stores/auth';
   import { useRuntimeConfig } from 'nuxt/app';
   
@@ -89,14 +89,45 @@ const themes = [
     // Handle redirection or other actions here
   };
   
-  const checkUser = () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      authStore.fetchUserDetails(token, config.apiUrl); // Now passing the API URL from runtime config
-    }
-  };
   
-  checkUser(); // Perform check on component mount
-  </script>
+  
+  // checkUser(); // Perform check on component mount
+    import { ref } from 'vue';
+    // import { useAuthStore } from '@/stores/auth'; // Ensure correct path
+    import { useRouter } from 'vue-router';
+    
+    // const config = useRuntimeConfig();
+    // const authStore = useAuthStore();
+    const router = useRouter();
+    const email = ref('');
+    const password = ref('');
+    
+    async function handleLogin() {
+      authStore.setLoading(true);
+    
+      try {
+        const response = await fetch(`${config.public.apiUrl}/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: email.value, password: password.value }),
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    
+        const data = await response.json();
+        authStore.logUserIn(data); // Use logUserIn method
+        router.push('/dashboard');
+      } catch (error) {
+        console.error('Login error:', error.message);
+      } finally {
+        authStore.setLoading(false);
+      }
+    }
+    </script>
+    
   
   
