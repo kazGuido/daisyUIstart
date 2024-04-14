@@ -1,12 +1,15 @@
 <template>
-  <div class="hero min-h-screen bg-base-200">
+  <div class="hero min-h-screen bg-base-200 relative">
+    <!-- Loading Spinner -->
+    <div v-if="authStore.isLoading" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="btn loading">loading</div>
+    </div>
+    <!-- Condition to check if not logged in -->
     <div v-if="!authStore.isLoggedIn" class="hero-content flex-col lg:flex-row-reverse">
-      <!-- Loading Spinner -->
-      <div v-if="authStore.isLoading" class="btn loading">loading</div>
       <div class="text-center lg:text-left">
-        <h1 class="text-5xl font-bold">Login now!</h1>
+        <h1 class="text-5xl font-bold">SuperTicket !</h1>
         <p class="py-6">
-          <b>Seamless Booking Process:</b> <br>Our intuitive interface guides you through the booking process step-by-step, ensuring a smooth and efficient experience.
+          <b>Simplify your life !</b> <br>Your solution to organize your events.<br>Your place to buy <b>any ticket</b>
         </p>
       </div>
       <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
@@ -32,7 +35,7 @@
         </form>
       </div>
     </div>
-    <!-- Welcome Message -->
+    <!-- Display for logged in users -->
     <div v-else class="stats shadow">
       <div class="stat">
         <div class="stat-title">Welcome back!</div>
@@ -48,41 +51,39 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue';
-  import { useAuthStore } from '@/stores/auth';  // Ensure correct path
-  import { useRuntimeConfig } from '#imports';
-  import { useRouter } from 'vue-router';
-  
-  const config = useRuntimeConfig();
-  const router = useRouter();
-  const authStore = useAuthStore();
-  const email = ref('');
-  const password = ref('');
-  
-  async function handleLogin() {
-    authStore.setLoading(true);  // Begin loading
-  
-    try {
-      const response = await fetch(`${config.public.apiUrl}/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: email.value, password: password.value }),
-      });
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-  
-      const data = await response.json();
-      authStore.setUser(data);  // Set user data on successful login
-      router.push('/dashboard');  // Navigate to dashboard
-    } catch (error) {
-      console.error('Login error:', error.message);
-    } finally {
-      authStore.setLoading(false);  // End loading
+import { ref } from 'vue';
+import { useAuthStore } from '@/stores/auth'; // Ensure correct path
+import { useRouter } from 'vue-router';
+
+const config = useRuntimeConfig();
+const authStore = useAuthStore();
+const router = useRouter();
+const email = ref('');
+const password = ref('');
+
+async function handleLogin() {
+  authStore.setLoading(true);
+
+  try {
+    const response = await fetch(`${config.public.apiUrl}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: email.value, password: password.value }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    const data = await response.json();
+    authStore.logUserIn(data); // Use logUserIn method
+    router.push('/dashboard');
+  } catch (error) {
+    console.error('Login error:', error.message);
+  } finally {
+    authStore.setLoading(false);
   }
-  </script>
-  
+}
+</script>
