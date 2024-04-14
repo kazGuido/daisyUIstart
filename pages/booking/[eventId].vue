@@ -47,12 +47,16 @@
             <div class="mt-2">
               <input type="number" v-model="booking.quantity" min="1" max="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Number of Tickets">
             </div>
-            <button type="submit" class="mt-4 flex w-full items-center justify-center rounded-md bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Book Now</button>
+            <!-- <button  class="button is-primary">Payer maintenant</button> -->
+            <button type="submit" @click="payWithPaystack" class="mt-4 flex w-full items-center justify-center rounded-md bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Book Now</button>
           </form>
         </div>
+
       </div>
     </div>
   </div>
+
+
 </template>
 
 <script setup>
@@ -75,5 +79,31 @@ const booking = ref({
 
 function submitBooking() {
   alert(`Booking ${booking.value.quantity} tickets for ${event.value.name}`);
+}
+
+export default {
+  methods: {
+    payWithPaystack() {
+      const currentDateTime = new Date().toISOString();
+      const customerEmail = `customer_${currentDateTime}@mycompany.com`.replace(/:/g, '-');
+
+      let handler = PaystackPop.setup({
+        key: 'pk_test_35d147ab629a9ccb014d192254e94403fe934449', // Replace with your public key
+        email: customerEmail,
+        amount: 10000 * 100, // Amount in smallest currency unit
+        currency: 'XOF',
+        ref: '' + Math.floor((Math.random() * 1000000000) + 1),
+        onClose: () => {
+          alert('Window closed.');
+        },
+        callback: (response) => {
+          let message = 'Payment complete! Reference: ' + response.reference;
+          alert(message);
+        }
+      });
+
+      handler.openIframe();
+    }
+  }
 }
 </script>

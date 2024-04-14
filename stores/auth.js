@@ -98,9 +98,9 @@ import { defineStore } from 'pinia';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    isLoggedIn: false,
     user: null,
-    isLoading: false
+    accessToken: null,
+    isLoading: false,
   }),
   actions: {
     setUser(user) {
@@ -110,15 +110,17 @@ export const useAuthStore = defineStore('auth', {
     setLoading(loading) {
       this.isLoading = loading;
     },
-    logUserIn(user) {
-      this.setUser(user);
+    logUserIn(userData, accessToken) {
+      this.user = userData;
+      this.accessToken = accessToken;
+      this.isLoggedIn = !!userData;
     },
     logUserOut() {
-      localStorage.removeItem('token');
-      this.setUser(null);
+      this.user = null;
+      this.accessToken = null;
     },
     checkLoggedIn(apiUrl) {
-      const token = localStorage.getItem('token');
+      const token = this.accessToken;
       if (token) {
         this.isLoggedIn = true;
         this.fetchUserDetails(token, apiUrl);

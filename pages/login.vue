@@ -72,9 +72,7 @@
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      const userData = data.user; // Access the "user" object from the response
-      const accesstoken = data.access_token;
-      authStore.logUserIn(userData,accesstoken); // Pass the user data to logUserIn method
+      authStore.logUserIn(data); // Use logUserIn method
       router.push('/dashboard');
     } catch (error) {
       console.error('Login error:', error.message);
