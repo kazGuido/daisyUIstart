@@ -18,9 +18,10 @@ export default defineNuxtConfig({
       console.log(routes);  // This will log all routes configuration to the console
     }
   },
+  app:{
   head: {
     script: [
       { src: 'https://js.paystack.co/v1/inline.js', body: true }
     ]
-  }
+  }}
 });

@@ -34,7 +34,7 @@
         </div>
         <!-- Booking Section -->
         <div class="mt-4 lg:mt-0 lg:row-span-3">
-          <form @submit.prevent="submitBooking">
+          <form @submit.prevent="payWithPaystack">
             <h2 class="text-lg font-medium text-gray-900">Book Your Tickets</h2>
             <div class="mt-2">
               <input type="number" v-model="booking.quantity" min="1" max="event.tickets_remaining" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Number of Tickets">
