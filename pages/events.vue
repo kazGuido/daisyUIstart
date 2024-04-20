@@ -1,12 +1,22 @@
 <template>
-  <div class="bg-white">
+  <div class="bg-white min-h-screen">
     <div class="mx-auto max-w-7xl px-4 py-16 lg:px-8">
-      <!-- List of Events -->
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-6">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">Events</h1>
+        <div class="flex space-x-2">
+          <div v-for="category in categories" :key="category" class="form-checkbox">
+            <label class="inline-flex items-center">
+              <input type="checkbox" class="checkbox checkbox-primary" :value="category" v-model="selectedCategories" @change="loadEvents">
+              <span class="ml-2 text-sm text-gray-600">{{ category }}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <div v-for="event in events" :key="event.id" class="group relative">
-          <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
+          <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 group-hover:opacity-75">
             <img v-if="event.images.length > 0" :src="event.images[0]" alt="Event image" class="h-full w-full object-cover object-center">
-            <img v-else src="https://via.placeholder.com/400x300" alt="No Event Image Available" class="h-full w-full object-cover object-center">
+            <img v-else src="https://via.placeholder.com/400x200" alt="No Event Image Available" class="h-full w-full object-cover object-center">
           </div>
           <div class="mt-4 flex justify-between">
             <div>
@@ -18,46 +28,22 @@
               <p class="mt-1 text-sm text-gray-500">{{ event.location }}</p>
               <p class="text-xs text-gray-500">Date: {{ formatDate(event.date) }}</p>
             </div>
-            <p class="text-sm font-medium text-gray-900">{{ event.tickets_remaining }} tickets left</p>
+            <div class="text-right">
+              <p class="text-sm font-medium text-gray-900">{{ event.tickets_remaining }} tickets left</p>
+            </div>
           </div>
         </div>
       </div>
-
-      <!-- Pagination -->
-      <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-        <div class="flex flex-1 justify-between sm:hidden">
-          <button @click="changePage(currentPage - 1)" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" :class="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }">Previous</button>
-          <button @click="changePage(currentPage + 1)" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" :class="{ 'opacity-50 cursor-not-allowed': currentPage >= totalPages }">Next</button>
-        </div>
-        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-          <div>
-            <!-- <p class="text-sm text-gray-700">
-              Showing
-              <span class="font-medium">{{ (currentPage - 1) * perPage + 1 }}</span>
-              to
-              <span class="font-medium">{{ Math.min(currentPage * perPage, totalItems) }}</span>
-              of
-              <span class="font-medium">{{ totalItems }}</span>
-              results
-            </p> -->
-          </div>
-          <div>
-            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-              <button @click="changePage(currentPage - 1)" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-sm text-gray-400 hover:text-gray-500" :class="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }">
-                <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
-              </button>
-              <!-- Numbers dynamically -->
-              <button v-for="page in pagesToShow" :key="page" @click="changePage(page)" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50" :class="{ 'bg-indigo-600 text-white': currentPage === page }">{{ page }}</button>
-              <button @click="changePage(currentPage + 1)" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-sm text-gray-400 hover:text-gray-500" :class="{ 'opacity-50 cursor-not-allowed': currentPage >= totalPages }">
-                <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
-              </button>
-            </nav>
-          </div>
-        </div>
+      <!-- Pagination Controls -->
+      <div class="pagination flex space-x-2 mt-8 justify-center">
+        <button @click="changePage(currentPage - 1)" class="btn" :class="{ 'btn-disabled': currentPage === 1 }">Prev</button>
+        <button v-for="page in pagesToShow" @click="changePage(page)" :key="page" class="btn" :class="{ 'btn-active': currentPage === page }">{{ page }}</button>
+        <button @click="changePage(currentPage + 1)" class="btn" :class="{ 'btn-disabled': currentPage >= totalPages }">Next</button>
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 
