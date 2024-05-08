@@ -56,6 +56,12 @@ export default defineNuxtConfig({
       supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
     }
   },
+  hooks: {
+    'nuxt:ready': (nuxt) => {
+      console.log('Supabase URL:', nuxt.options.runtimeConfig.public.supabaseUrl);
+      console.log('Supabase Anon Key:', nuxt.options.runtimeConfig.public.supabaseAnonKey);
+    }
+  },
   app: {
   head: {
     script: [
