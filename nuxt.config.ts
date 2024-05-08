@@ -25,7 +25,22 @@
 //   }
 // });
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/color-mode', "@pinia/nuxt",'@nuxtjs/supabase'],
+  modules: ['@nuxtjs/tailwindcss', 
+  '@nuxtjs/color-mode', 
+  "@pinia/nuxt",
+  '@nuxtjs/supabase',
+  '@vee-validate/nuxt'],
+  veeValidate: {
+    // disable or enable auto imports
+    autoImports: true,
+    // Use different names for components
+    componentNames: {
+      Form: 'VeeForm',
+      Field: 'VeeField',
+      FieldArray: 'VeeFieldArray',
+      ErrorMessage: 'VeeErrorMessage',
+    },
+  },
   colorMode: {
     preference: 'system', // default theme
     dataValue: 'theme', // activate data-theme in <html> tag
